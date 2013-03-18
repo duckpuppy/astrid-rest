@@ -1,3 +1,5 @@
+require 'json'
+require 'restclient'
 require "astrid/rest/version"
 
 module Astrid
