@@ -5,6 +5,10 @@ require "astrid/rest/version"
 
 module Astrid
   module Rest
+    class << self
+      attr_accessor :user_hash
+    end
+
     def self.sign_in
     end
 
