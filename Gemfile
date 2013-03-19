@@ -5,6 +5,7 @@ gemspec
 
 group :development do
   gem 'guard-rspec'
+  gem 'rb-inotify', '~> 0.9'
 end
 
 group :test do
