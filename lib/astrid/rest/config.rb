@@ -18,6 +18,13 @@ module Astrid
 
         @config = defaults.merge(global).merge(local)
       end
+
+      def configure!
+        load_config
+        File.open(LOCAL_CONFIG, 'w') do |file|
+          file.puts(@config.to_yaml)
+        end
+      end
     end
   end
 end

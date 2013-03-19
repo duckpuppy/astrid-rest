@@ -3,15 +3,14 @@ require 'yaml'
 require 'restclient'
 require "astrid/rest/version"
 
+# Require the gem files
 require File.join(File.dirname(__FILE__), 'rest', 'config')
 
 module Astrid
   module Rest
     extend self
 
-    attr_accessor :user_hash
-
-    def self.sign_in
+    def sign_in
     end
   end
 end
