@@ -12,6 +12,7 @@ describe Astrid::Rest::Config do
         include FakeFS::SpecHelpers
 
         before :each do
+          # We have to do this for each rather than all so that FakeFS is used
           FileUtils.mkdir("/etc")
           global_hash = { "secret" => "global_secret", "api_key" => "global_key" }
           @global = File.new(Astrid::Rest::Config::GLOBAL_CONFIG, 'w+')
@@ -20,9 +21,11 @@ describe Astrid::Rest::Config do
           @config = Astrid::Rest::Config.load_config
         end
 
-        it "should load properly" do
-          @config["secret"].should eq "global_secret"
-        end
+        subject { @config }
+        it { should_not be_nil }
+        it { should_not be_empty }
+        specify { @config["secret"].should eq "global_secret" }
+        specify { @config["api_key"].should eq "global_key" }
       end
     end
     describe "local config" do
