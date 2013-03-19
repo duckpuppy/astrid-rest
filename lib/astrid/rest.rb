@@ -8,12 +8,9 @@ require File.join(File.dirname(__FILE__), 'rest', 'config')
 
 module Astrid
   module Rest
-    API_VERSION = "7"
-    API_ROOT = "https://astrid.com/api/#{API_VERSION}/"
-
     extend self
 
-    def sign_in
-    end
+    API_VERSION = "7"
+    API_ROOT = "https://astrid.com/api/#{API_VERSION}/"
   end
 end

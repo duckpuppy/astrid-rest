@@ -1,22 +1,31 @@
 require 'spec_helper'
 
-describe "Astrid::Rest::Config" do
-  subject { Astrid::Rest::Config }
-  describe ".load_config" do
-    context "global config" do
+describe Astrid::Rest::Config do
+  describe "#load_config" do
+    describe "global config" do
       context "missing" do
         include FakeFS::SpecHelpers
-        File.rm(Astrid::Rest::Config::GLOBAL_CONFIG) if File.exist? Astrid::Rest::Config::GLOBAL_CONFIG
-        it "should not raise an error" do
-          expect {Astrid::Rest::Config.load_config}.to_not raise_error
-        end
+        specify { expect {Astrid::Rest::Config.load_config}.to_not raise_error }
       end
+
       context "present" do
         include FakeFS::SpecHelpers
-        # TODO: Create a global config file in the Fake FS
+
+        before :each do
+          FileUtils.mkdir("/etc")
+          global_hash = { "secret" => "global_secret", "api_key" => "global_key" }
+          @global = File.new(Astrid::Rest::Config::GLOBAL_CONFIG, 'w+')
+          @global.write(global_hash.to_yaml)
+
+          @config = Astrid::Rest::Config.load_config
+        end
+
+        it "should load properly" do
+          @config["secret"].should eq "global_secret"
+        end
       end
     end
-    context "local config" do
+    describe "local config" do
       context "missing" do
         context "with global" do
         end

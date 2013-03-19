@@ -8,8 +8,7 @@ module Astrid
       attr_reader :config
 
       def defaults
-        {
-        }
+        {}
       end
 
       def load_config
