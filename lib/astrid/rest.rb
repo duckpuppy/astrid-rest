@@ -5,7 +5,7 @@ require "astrid/rest/version"
 
 module Astrid
   module Rest
-    GLOBAL_CONFIG = File.new('/etc/astridrc')
+    GLOBAL_CONFIG = '/etc/astridrc'
     CONFIG_FILE = File.expand_path('~/.astridrc')
 
     class << self
