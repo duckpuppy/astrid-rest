@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/duckpuppy/astrid-rest.png)](https://travis-ci.org/duckpuppy/astrid-rest)
-
-# Astrid::Rest
+# Astrid::Rest [![Build Status](https://travis-ci.org/duckpuppy/astrid-rest.png)](https://travis-ci.org/duckpuppy/astrid-rest)
 
 TODO: Write a gem description
 
