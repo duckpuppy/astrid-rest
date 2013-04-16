@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+# TODO: There's some really bad redundancy here - make helpers for creating
+# config files and testing hash contents
 describe Astrid::Rest::Config do
   describe "::GLOBAL_CONFIG" do
     it "should be defined" do
@@ -25,13 +27,14 @@ describe Astrid::Rest::Config do
 
       context "present" do
         include FakeFS::SpecHelpers
+        let(:expected) { { "secret" => "global_secret", "api_key" => "global_key" } }
 
         before :each do
           # We have to do this for each rather than all so that FakeFS is used
           FileUtils.mkdir("/etc")
-          global_hash = { "secret" => "global_secret", "api_key" => "global_key" }
+          config_hash = { "secret" => "global_secret", "api_key" => "global_key" }
           @global = File.new(Astrid::Rest::Config::GLOBAL_CONFIG, 'w+')
-          @global.write(global_hash.to_yaml)
+          @global.write(config_hash.to_yaml)
 
           @config = Astrid::Rest::Config.load_config
         end
@@ -39,8 +42,7 @@ describe Astrid::Rest::Config do
         subject { @config }
         it { should_not be_nil }
         it { should_not be_empty }
-        specify { @config["secret"].should eq "global_secret" }
-        specify { @config["api_key"].should eq "global_key" }
+        it { should eq expected }
       end
     end
     describe "local config" do
@@ -57,19 +59,20 @@ describe Astrid::Rest::Config do
         before :each do
           # We have to do this for each rather than all so that FakeFS is used
           FileUtils.makedirs(File.dirname(Astrid::Rest::Config::LOCAL_CONFIG))
-          local_hash = { "secret" => "local_secret", "user" => "local_user" }
+          config_hash = { "secret" => "local_secret", "user" => "local_user" }
           @local = File.new(Astrid::Rest::Config::LOCAL_CONFIG, 'w+')
-          @local.write(local_hash.to_yaml)
+          @local.write(config_hash.to_yaml)
 
           @config = Astrid::Rest::Config.load_config
         end
         context "with global" do
+          let(:expected) { { "secret" => "local_secret", "api_key" => "global_key", "user" => "local_user" } }
           before :each do
             # We have to do this for each rather than all so that FakeFS is used
             FileUtils.mkdir("/etc")
-            global_hash = { "secret" => "global_secret", "api_key" => "global_key" }
+            config_hash = { "secret" => "global_secret", "api_key" => "global_key" }
             @global = File.new(Astrid::Rest::Config::GLOBAL_CONFIG, 'w+')
-            @global.write(global_hash.to_yaml)
+            @global.write(config_hash.to_yaml)
 
             @config = Astrid::Rest::Config.load_config
           end
@@ -77,12 +80,16 @@ describe Astrid::Rest::Config do
           subject { @config }
           it { should_not be_nil }
           it { should_not be_empty }
-          specify { @config["secret"].should eq "local_secret" }
-          specify { @config["api_key"].should eq "global_key" }
-          specify { @config["user"].should eq "local_user" }
+          it { should eq expected }
         end
 
         context "without global" do
+          let (:expected) { { "secret" => "local_secret", "user" => "local_user" } }
+
+          subject { @config }
+          it { should_not be_nil }
+          it { should_not be_empty }
+          it { should eq expected }
         end
       end
     end
